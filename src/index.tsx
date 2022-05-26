@@ -4,13 +4,21 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import dayjs from "dayjs";
+import 'dayjs/locale/id' // import locale
+import ContextWrapper from './context/ContextWrapper';
+
+dayjs.locale('id')
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
+  <ContextWrapper>
     <App />
-  </React.StrictMode>
+  </ContextWrapper>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
