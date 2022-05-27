@@ -7,34 +7,51 @@ const colorClasses = ['bg-amber-500', 'bg-emerald-500', 'bg-cyan-500', 'bg-indig
 type Props = {};
 
 const ModalEvent: React.FC<Props> = () => {
-	const [title, setTitle] = useState('')
-	const [description, setDescription] = useState('')
-	const [selectedLabel, setSelectedLabel] = useState(colorClasses[0])
-	
-	const { setShowModalEvent, daySelected, dispatchCalTask } = useContext(GlobalContext)
+	const { setShowModalEvent, daySelected, dispatchCalTask, taskSelected, setTaskSelected } = useContext(GlobalContext)
 
+	const [title, setTitle] = useState(taskSelected? taskSelected.title : '')
+	const [description, setDescription] = useState(taskSelected? taskSelected.description : '')
+	const [selectedLabel, setSelectedLabel] = useState(taskSelected? taskSelected.label : colorClasses[0])
+	
 	const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
 		e.preventDefault()
 
 		const taskToSave = {
-			id: Date.now(),
+			id: taskSelected? taskSelected.id : Date.now(),
 			date: dayjs(daySelected).format('DD-MM-YY'),
 			title,
 			description,
 			label: selectedLabel
 		}
 
-		dispatchCalTask({type: 'push', payload: taskToSave})
+		if(taskSelected){
+			dispatchCalTask({type: 'update', payload: taskToSave})
+		}else{
+			dispatchCalTask({type: 'push', payload: taskToSave})
+		}
+		handleCloseModal()
+	}
+
+	const handleDeleteTask = () => {
+		dispatchCalTask({type: 'delete', payload: taskSelected})
+		handleCloseModal()
+	}
+
+	const handleCloseModal = () => {
+		setTaskSelected(null)
 		setShowModalEvent(false)
 	}
 
 	return (
 		<>
 			<div className='modal-form font-poppins'>
-				<div className='modal-form-outside' onClick={() => setShowModalEvent(false)} />
+				<div className='modal-form-outside' onClick={handleCloseModal} />
 				<form className='bg-white rounded-lg shadow-2xl w-11/12 md:w-4/12 2xl:w-1/4 z-50' onSubmit={handleSubmit}>
-					<header className='bg-gray-100 px-4 py-2.5 flex justify-end item-center rounded-t-lg'>
-						<i className="fa-solid fa-xmark cursor-pointer text-gray-500" onClick={() => setShowModalEvent(false)}></i>
+					<header className='bg-gray-100 px-4 py-2.5 flex justify-end item-center rounded-t-lg text-lg'>
+						{taskSelected &&
+						<i className="fa-regular fa-trash-can cursor-pointer text-gray-500 hover:text-gray-800 mr-5" onClick={handleDeleteTask}></i>
+						}
+						<i className="fa-solid fa-xmark cursor-pointer text-gray-500 hover:text-gray-800" onClick={handleCloseModal}></i>
 					</header>
 					<div className='p-5 text-gray-600'>
 						<div className='grid grid-cols-1/5 items-end gap-y-7'>

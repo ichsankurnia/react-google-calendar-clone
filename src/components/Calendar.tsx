@@ -10,9 +10,8 @@ interface IDayProps {
 const Day: React.FC<IDayProps> = ({day, weekIndex}) => {
 	const [dayTasks, setDayTasks] = useState<any[]>([])
 
-	const { monthIndex, setShowModalEvent, setDaySelected, savedTasks } = useContext(GlobalContext)
+	const { monthIndex, setShowModalEvent, setDaySelected, savedTasks, setTaskSelected } = useContext(GlobalContext)
 
-	console.log(savedTasks)
 	useEffect(() => {
 		const tasks = savedTasks.filter((task) => task.date === day.format("DD-MM-YY") )
 		setDayTasks(tasks)
@@ -31,8 +30,13 @@ const Day: React.FC<IDayProps> = ({day, weekIndex}) => {
 	}
 
 	const handleClickDate = (day: any) => {
-		setShowModalEvent(true)
 		setDaySelected(day)
+		setShowModalEvent(true)
+	}
+
+	const handleSelectTask = (task: any) => {
+		setTaskSelected(task)
+		setShowModalEvent(true)
 	}
 
 	return (
@@ -45,7 +49,9 @@ const Day: React.FC<IDayProps> = ({day, weekIndex}) => {
 			</header>
 			<div className='flex flex-1 flex-col w-full cursor-pointer' onClick={() => handleClickDate(day)}>
 				{dayTasks.map((task, key) =>
-					<span key={key} className={`${task.label} p-1 mr-3 text-white text-sm rounded mb-1 truncate`}>
+					<span key={key} className={`${task.label} p-1 mr-3 text-white text-sm rounded mb-1 truncate hover:bg-opacity-70`} 
+						onClick={()=>handleSelectTask(task)}
+					>
 						{task.title}
 					</span>
 				)}
