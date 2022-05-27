@@ -12,6 +12,8 @@ export interface AppContextInterface {
     setShowModalEvent: (state: boolean) => any,
     savedTasks: any[],
     dispatchCalTask: (action: ActionRedux) => any,
+    taskSelected: any,
+    setTaskSelected: (task: any) => any
   }
   
 

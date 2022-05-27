@@ -37,6 +37,7 @@ const ContextWrapper: React.FC<Props> = ({ children }) => {
     const [smallCalendarIndex, setSmallCalendarIndex] = useState<number|null>(null)
     const [daySelected, setDaySelected] = useState(dayjs())
     const [showModalEvent, setShowModalEvent] = useState(false)
+    const [taskSelected, setTaskSelected] = useState(null)
 
     const [savedTasks, dispatchCalTask] = useReducer(savedTasksReducer, [], initTasks )
 
@@ -58,8 +59,8 @@ const ContextWrapper: React.FC<Props> = ({ children }) => {
                 smallCalendarIndex, setSmallCalendarIndex,
                 daySelected, setDaySelected,
                 showModalEvent, setShowModalEvent,
-                savedTasks,
-                dispatchCalTask
+                savedTasks, dispatchCalTask,
+                taskSelected, setTaskSelected
             }}
         >
             {children}
