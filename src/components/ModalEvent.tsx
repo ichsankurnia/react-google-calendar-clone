@@ -56,13 +56,13 @@ const ModalEvent: React.FC<Props> = () => {
 					<div className='p-5 text-gray-600'>
 						<div className='grid grid-cols-1/5 items-end gap-y-7'>
 							<div></div>
-							<input name='title' placeholder='Add Title' value={title} onChange={(e) => setTitle(e.target.value)} required
+							<input name='title' placeholder='Add Title' value={title || ''} onChange={(e) => setTitle(e.target.value)} required
 								className='pt-3 pb-0.5 outline-none border-b-2 border-gray-200 focus:border-blue-600 text-xl font-medium text-gray-600'
 							/>
 							<i className="fa-regular fa-clock text-gray-500 text-lg"></i>
 							<p>{daySelected.format("dddd, DD MMMM YYYY")}</p>
 							<i className="fa-solid fa-align-left text-gray-500 text-lg"></i>
-							<input name='description' placeholder='Add Description' value={description} onChange={(e) => setDescription(e.target.value)}
+							<textarea name='description' placeholder='Add Description' value={description || ''} onChange={(e) => setDescription(e.target.value)}
 								className='pt-3 pb-0.5 outline-none border-b-2 border-gray-200 focus:border-blue-600 text-gray-600'
 							/>
 							<i className="fa-regular fa-bookmark text-gray-500 text-lg"></i>
