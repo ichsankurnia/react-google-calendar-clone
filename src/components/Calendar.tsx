@@ -8,14 +8,14 @@ interface IDayProps {
 }
 
 const Day: React.FC<IDayProps> = ({day, weekIndex}) => {
-	const [dayTasks, setDayTasks] = useState<any[]>([])
+	const [tasksInDay, setTasksInDay] = useState<any[]>([])
 
-	const { monthIndex, setShowModalEvent, setDaySelected, savedTasks, setTaskSelected } = useContext(GlobalContext)
+	const { monthIndex, setShowModalEvent, setDaySelected, filteredTasks, setTaskSelected } = useContext(GlobalContext)
 
 	useEffect(() => {
-		const tasks = savedTasks.filter((task) => task.date === day.format("DD-MM-YY") )
-		setDayTasks(tasks)
-	}, [savedTasks, day])
+		const tasks = filteredTasks.filter((task) => task.date === day.format("DD-MM-YY") )
+		setTasksInDay(tasks)
+	}, [filteredTasks, day])
 
 	const getCurrentDayClass = (day: any) => {
 		return day.format('DD-MM-YY') === dayjs().format('DD-MM-YY') ?
@@ -48,7 +48,7 @@ const Day: React.FC<IDayProps> = ({day, weekIndex}) => {
 				<p className={`text-sm p-1 my-1 ${isSunday(day)} ${currentDayNotInCurrentMonth(day)} ${getCurrentDayClass(day)}`}>{dayjs(day).format('DD')}</p>
 			</header>
 			<div className='flex flex-1 flex-col w-full cursor-pointer' onClick={() => handleClickDate(day)}>
-				{dayTasks.map((task, key) =>
+				{tasksInDay.map((task, key) =>
 					<span key={key} className={`${task.label} p-1 mr-3 text-white text-sm rounded mb-1 truncate hover:bg-opacity-70`} 
 						onClick={()=>handleSelectTask(task)}
 					>

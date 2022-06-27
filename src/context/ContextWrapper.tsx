@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
-import React, { ReactNode, useEffect, useReducer, useState } from 'react';
-import GlobalContext from './GlobalContext';
+import React, { ReactNode, useEffect, useMemo, useReducer, useState } from 'react';
+import GlobalContext, { IFilterTag, ITask } from './GlobalContext';
 
 export interface ActionRedux {
     type: string,
@@ -37,7 +37,8 @@ const ContextWrapper: React.FC<Props> = ({ children }) => {
     const [smallCalendarIndex, setSmallCalendarIndex] = useState<number|null>(null)
     const [daySelected, setDaySelected] = useState(dayjs())
     const [showModalEvent, setShowModalEvent] = useState(false)
-    const [taskSelected, setTaskSelected] = useState(null)
+    const [taskSelected, setTaskSelected] = useState<ITask>({} as ITask)
+    const [labels, setLabels] = useState<IFilterTag[]>([] as IFilterTag[])
 
     const [savedTasks, dispatchCalTask] = useReducer(savedTasksReducer, [], initTasks )
 
@@ -48,9 +49,36 @@ const ContextWrapper: React.FC<Props> = ({ children }) => {
         }
     }, [smallCalendarIndex])
 
+    const filteredTasks = useMemo(() => {
+        return savedTasks.filter((task: ITask) =>
+            labels.filter((lbl) => lbl.checked)
+            .map((lbl) => lbl.label)
+            .includes(task.label)
+        )
+    }, [savedTasks, labels])
+
     useEffect(() => {
         localStorage.setItem('savedTasks', JSON.stringify(savedTasks))
     }, [savedTasks])
+
+    useEffect(() => {
+        setLabels((prevLabels: any) => {
+            return [...new Set(savedTasks.map((task: ITask) => task.label))].map(
+                (label) => {
+                    const currentLabel = prevLabels.find((item: IFilterTag) => item.label === label)
+                    return {
+                        label,
+                        checked: currentLabel ? currentLabel.label: true
+                    }
+                }
+            )
+        })
+    }, [savedTasks])
+
+
+    function updateLabel(data: IFilterTag){
+        setLabels(labels.map((item: IFilterTag) => item.label === data.label? data: item))
+    }
 
     return (
         <GlobalContext.Provider 
@@ -60,7 +88,9 @@ const ContextWrapper: React.FC<Props> = ({ children }) => {
                 daySelected, setDaySelected,
                 showModalEvent, setShowModalEvent,
                 savedTasks, dispatchCalTask,
-                taskSelected, setTaskSelected
+                taskSelected, setTaskSelected,
+                labels, setLabels, updateLabel,
+                filteredTasks
             }}
         >
             {children}

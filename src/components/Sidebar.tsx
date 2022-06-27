@@ -9,7 +9,7 @@ const Sidebar: React.FC<Props> = () => {
 	const [currentMonthIndex, setCurrentMonthIndex] = useState(dayjs().month())
 	const [currentMonthDays, setCurrentMonthDays] = useState(getDaysInMonth())
 
-	const { monthIndex, setSmallCalendarIndex, daySelected, setDaySelected, setShowModalEvent } = useContext(GlobalContext)
+	const { monthIndex, setSmallCalendarIndex, daySelected, setDaySelected, setShowModalEvent, labels, updateLabel } = useContext(GlobalContext)
 
 	useEffect(() => {
 		setCurrentMonthDays(getDaysInMonth(currentMonthIndex))
@@ -53,6 +53,8 @@ const Sidebar: React.FC<Props> = () => {
 		return dayjs(day).format('dddd').toLowerCase()==='minggu'?'text-red-400':''
 	}
 
+	console.log(labels)
+
 	return (
 		<aside className='border w-64 p-5'>
 			<button className='border px-4 py-2.5 rounded-full flex items-center justify-center shadow-md hover:shadow-xl'
@@ -91,6 +93,17 @@ const Sidebar: React.FC<Props> = () => {
 						</React.Fragment>
 					)}
 				</div>
+			</div>
+
+			<div className='mt-5'>
+				<h4>Label</h4>
+				{labels.map((item, key) => 
+					<label key={key} className={`flex items-center mt-3 ${item.label} text-white px-2 py-1 rounded-md text-sm`}>
+						<input type='checkbox' checked={item.checked} onChange={()=> updateLabel({label: item.label, checked: !item.checked}) } className='h-5 w-5' />
+						{/* Bg-Amber-500 */}
+						<span className='ml-2 capitalize'>{item.label.split('-')[1]}</span>		
+					</label>
+				)}
 			</div>
 		</aside>
 	);

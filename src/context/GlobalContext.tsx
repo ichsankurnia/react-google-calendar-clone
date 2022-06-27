@@ -1,6 +1,19 @@
 import React from "react"
 import { ActionRedux } from "./ContextWrapper";
 
+export interface ITask {
+  id: number,
+  date: any,
+  title: string,
+  description: string,
+  label: string
+}
+
+export interface IFilterTag {
+  label: string,
+  checked: boolean | undefined
+}
+
 export interface AppContextInterface {
     monthIndex: number;
     setMonthIndex: (index: number) => any
@@ -10,10 +23,14 @@ export interface AppContextInterface {
     setDaySelected: (day: any) => any,
     showModalEvent: boolean,
     setShowModalEvent: (state: boolean) => any,
-    savedTasks: any[],
+    savedTasks: ITask[],
     dispatchCalTask: (action: ActionRedux) => any,
-    taskSelected: any,
-    setTaskSelected: (task: any) => any
+    taskSelected: ITask,
+    setTaskSelected: (task: ITask| any) => any,
+    labels: IFilterTag[],
+    setLabels: (labels: IFilterTag[]) => any,
+    updateLabel: (label: IFilterTag) => any,
+    filteredTasks: ITask[]
   }
   
 
